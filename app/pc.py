@@ -3,8 +3,10 @@ import json
 
 pc_bp = Blueprint('pc', __name__)
 
+# List of PCs added to the configuration.
 pcs = []
 
+# PC configuration to be added from the API.
 pc_config = {
   "pc-config": {
     "hostname": "",
@@ -16,16 +18,24 @@ pc_config = {
   }
 }
 
+# Scheme for the PC body to be added from the API.
 pc_scheme = {
     "hostname": ""
 }
 
+# Scheme for the IPv4 body to be added from the API.
 ipv4_scheme = {
     "address": "",
     "netmask": "",
     "gateway": ""
 }
 
+"""
+Add a PC to the configuration. The hostname is passed as a parameter in the URL. 
+The function checks if the PC already exists in the configuration. 
+If it does, it returns a message saying that the PC already exists. 
+If it doesn't, it adds the PC to the configuration and returns the PC configuration with a status code of 201.
+"""
 @pc_bp.route('/add/<hostname>', methods=['POST'])
 def add_pc(hostname):
 
@@ -39,10 +49,16 @@ def add_pc(hostname):
 
     return jsonify(new_pc), 201
 
+"""
+Return all PCs in the configuration.
+"""
 @pc_bp.route('/get', methods=['GET'])
 def get_pcs():
     return jsonify(pcs)
 
+"""
+Modify the IPv4 address of a PC. The hostname is passed as a parameter in the URL.
+"""
 @pc_bp.route('/change/ipv4/<hostname>', methods=['POST'])
 def change_ipv4(hostname):
     temp_ipv4 = request.get_json()

@@ -3,8 +3,10 @@ import json
 
 router_bp = Blueprint('router', __name__)
 
+# List of routers added to the configuration.
 routers = []
 
+# Router configuration to be added from the API.
 router = {
   "router-config": {
     "hostname": "router",
@@ -46,6 +48,7 @@ router = {
   }
 }
 
+# Scheme for the router body to be added from the API.
 router_scheme = {
     "hostname": "router",
     "type": "router",
@@ -53,6 +56,7 @@ router_scheme = {
     "password": "admin"
 }
 
+# Scheme for the interface body to be added from the API.
 interface_scheme = {
     "name": "GigabitEthernet0/0/0",
     "description": "Main Ethernet interface",
@@ -60,6 +64,7 @@ interface_scheme = {
     "shutdown": "false"
 }
 
+#Scheme for the ipv4 body to be added from the API.
 ipv4_scheme = {
     "address": "",
     "netmask": ""
@@ -70,10 +75,11 @@ ipv4_scheme = {
 def get_items():
     return jsonify(routers)
 
+"""
+Add a router to the configuration. Check if the hostname already exists in the configuration.
+"""
 @router_bp.route('/add', methods=['POST'])
 def add_router():
-    if request.content_type != 'application/yang-data+json':
-        return jsonify({'error': 'Unsupported Media Type'}), 415
     temp_router = request.get_json()
     if not temp_router:
         return jsonify({'error': 'Invalid input'}), 400
@@ -97,6 +103,9 @@ def add_router():
         return jsonify({'error': 'Invalid input, Maybe try checking format?'}), 400
 
 
+"""
+Allow the user to change the description, enabled, and shutdown status of a specific interface on a router.
+"""
 @router_bp.route('/change/interface/<hostname>/<interface>', methods=['PUT'])
 def add_interface(hostname, interface_to_change):
     config = request.get_json()
@@ -114,7 +123,9 @@ def add_interface(hostname, interface_to_change):
             return jsonify({'error': 'Interface not found'}), 404
     return jsonify({'error': 'Router not found'}), 404
 
-
+"""
+Allow the user to change the IPv4 address of a specific interface on a router.
+"""
 @router_bp.route('/change/ipv4/<hostname>/<interface>', methods=['PUT'])
 def add_ipv4(hostname, interface_to_change):
     config = request.get_json()
@@ -131,6 +142,9 @@ def add_ipv4(hostname, interface_to_change):
             return jsonify({'error': 'Interface not found'}), 404
     return jsonify({'error': 'Router not found'}), 404
 
+"""
+Check if the hostname already exists between the existing routers.
+"""
 def CheckHostname(router_sch):
     for i in routers:
         if i['router-config']['hostname'] == router_sch['hostname']:

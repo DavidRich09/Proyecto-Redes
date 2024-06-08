@@ -3,8 +3,10 @@ import json
 
 switch_bp = Blueprint('switch', __name__)
 
+# List of switches added to the configuration.
 switches = []
 
+# Switch configuration to be added from the API.
 switch_config = {
     "switch-config": {
         "hostname": "example-switch",
@@ -39,21 +41,27 @@ switch_config = {
     }
 }
 
+# Scheme for the switch body to be added from the API.
 switch_scheme = {
     "hostname": "",
 }
 
+# Scheme for the interface body to be added from the API.
 interface_scheme = {
     "name": "",
     "description": "",
     "enabled": ""
 }
 
+# Scheme for the VLAN body to be added from the API.
 vlan_scheme = {
     "vlan_id": "",
     "name": ""
 }
 
+"""
+Add a switch to the configuration. The hostname is passed as a parameter in the URL.
+"""
 @switch_bp.route('/add/<hostname>', methods=['POST'])
 def add_switch(hostname):
 
@@ -66,10 +74,16 @@ def add_switch(hostname):
     switches.append(new_switch)
     return jsonify({'Success':'Switch added to configuration'}), 201
 
+"""
+Get all switches in the configuration.
+"""
 @switch_bp.route('/get', methods=['GET'])
 def get_switches():
     return jsonify(switches)
 
+"""
+Add a VLAN to the configuration. The switch hostname is passed as a parameter in the URL.
+"""
 @switch_bp.route('/add/vlan/<hostname>', methods=['POST'])
 def add_vlan(hostname):
     temp_vlan = request.get_json()
@@ -86,6 +100,9 @@ def add_vlan(hostname):
 
     return jsonify({'Error': 'Switch not found'}), 404
 
+"""
+Change switch interface configuration. The switch hostname and interface name are passed as parameters in the URL.
+"""
 @switch_bp.route('/change/interface/<hostname>/<interface>', methods=['POST'])
 def change_interface(hostname, interface):
     temp_interface = request.get_json()
