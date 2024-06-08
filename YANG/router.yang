@@ -1,0 +1,37 @@
+module router {
+  namespace "urn:desafio:router";
+  prefix "router";
+
+  container router-config {
+    leaf hostname {
+      type string;
+      description "Hostname of the router";
+    }
+    list interface {
+      key "name";
+      leaf name {
+        type string;
+        description "Name of the interface";
+      }
+      leaf description {
+        type string;
+        description "Description of the interface";
+      }
+      leaf enabled {
+        type boolean;
+        default "true";
+        description "Enable or disable the interface";
+      }
+      container ipv4 {
+        leaf address {
+          type string;
+          description "IPv4 address";
+        }
+        leaf netmask {
+          type string;
+          description "IPv4 netmask";
+        }
+      }
+    }
+  }
+}

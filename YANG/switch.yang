@@ -1,0 +1,42 @@
+module switch {
+  namespace "urn:example:switch";
+  prefix "switch";
+
+  import ietf-interfaces {
+    prefix if;
+  }
+
+  container switch-config {
+    leaf hostname {
+      type string;
+      description "Hostname of the switch";
+    }
+    list vlan {
+      key "id";
+      leaf id {
+        type uint16;
+        description "VLAN ID";
+      }
+      leaf name {
+        type string;
+        description "Name of the VLAN";
+      }
+    }
+    list interface {
+      key "name";
+      leaf name {
+        type string;
+        description "Name of the interface";
+      }
+      leaf description {
+        type string;
+        description "Description of the interface";
+      }
+      leaf enabled {
+        type boolean;
+        default "true";
+        description "Enable or disable the interface";
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+module pc {
+  namespace "urn:example:pc";
+  prefix "pc";
+
+  container pc-config {
+    leaf hostname {
+      type string;
+      description "Hostname of the PC";
+    }
+    container ipv4 {
+      leaf address {
+        type string;
+        description "IPv4 address";
+      }
+      leaf netmask {
+        type string;
+        description "IPv4 netmask";
+      }
+      leaf gateway {
+        type string;
+        description "IPv4 gateway";
+      }
+    }
+  }
+}
