@@ -1,0 +1,187 @@
+{
+    "hostname": "router",
+    "type": "router",
+    "username": "admin",
+    "password": "admin",
+    "interface": [
+      {
+        "name": "GigabitEthernet0/0/0",
+        "description": "Main Ethernet interface",
+        "enabled": "true",
+        "shutdown": "false",
+        "ipv4": {
+          "address": "192.168.0.1",
+          "netmask": "255.255.255.0"
+        }
+      },
+        {
+            "name": "GigabitEthernet0/0/1",
+            "description": "Ethernet interface 1",
+            "enabled": "true",
+            "shutdown": "false",
+            "ipv4": {
+                "address": "192.168.1.1",
+                "netmask": "255.255.255.0"
+            }
+        },
+        {
+            "name": "GigabitEthernet0/0/2",
+            "description": "Ethernet interface 1",
+            "enabled": "true",
+            "shutdown": "false",
+            "ipv4": {
+                "address": "192.168.2.1",
+                "netmask": "255.255.255.0"
+            }
+        }
+    ]
+}
+
+{  "switch-config": {
+    "hostname": "switch1",
+    "vlan_id": [],
+    "interface": [
+        {
+            "name": "FastEthernet0/0/0",
+            "description": "Main Ethernet interface",
+            "enabled": "true",
+            "connected_to": ""
+        },
+        {
+            "name": "FastEthernet0/0/1",
+            "description": "Secondary Ethernet interface",
+            "enabled": "true"
+        },
+        {
+            "name": "FastEthernet0/0/2",
+            "description": "Third Ethernet interface",
+            "enabled": "true"
+        },
+        {
+            "name": "FastEthernet0/0/3",
+            "description": "Fourth Ethernet interface",
+            "enabled": "true"
+        },
+        {
+            "name": "GigabitEthernet0/0/0",
+            "description": "Main Ethernet interface",
+            "enabled": "true",
+            "connected_to": ""
+        }
+    ]
+    }
+}
+
+{  "switch-config": {
+    "hostname": "switch2",
+    "vlan_id": [],
+    "interface": [
+        {
+            "name": "FastEthernet0/0/0",
+            "description": "Main Ethernet interface",
+            "enabled": "true",
+            "connected_to": ""
+        },
+        {
+            "name": "FastEthernet0/0/1",
+            "description": "Secondary Ethernet interface",
+            "enabled": "true"
+        },
+        {
+            "name": "FastEthernet0/0/2",
+            "description": "Third Ethernet interface",
+            "enabled": "true"
+        },
+        {
+            "name": "FastEthernet0/0/3",
+            "description": "Fourth Ethernet interface",
+            "enabled": "true"
+        },
+        {
+            "name": "GigabitEthernet0/0/0",
+            "description": "Main Ethernet interface",
+            "enabled": "true",
+            "connected_to": ""
+        }
+    ]
+}
+}
+
+add vlan to switch
+/switch/add/vlan/switch1
+{
+    "vlan_id": 10,
+    "name": "VLAN Ingenieria"
+}
+
+assign vlan
+/switch/assign/vlan/switch1?interface=FastEthernet0/0/0
+{
+    "vlan_id": 10
+}
+
+
+/switch/add/vlan/switch1
+{
+    "vlan_id": 20,
+    "name": "VLAN Mercadeo"
+}
+
+/switch/assign/vlan/switch1?interface=FastEthernet0/0/1
+{
+    "vlan_id": 20
+}
+
+/switch/add/vlan/switch1
+{
+    "vlan_id": 30,
+    "name": "VLAN Legal"
+}
+
+/switch/assign/vlan/switch1?interface=FastEthernet0/0/2
+{
+    "vlan_id": 30
+}
+
+
+/switch/add/vlan/switch2
+{
+    "vlan_id": 10,
+    "name": "VLAN Ingenieria"
+}
+
+assign vlan
+/switch/assign/vlan/switch2?interface=FastEthernet0/0/0
+{
+    "vlan_id": 10
+}
+
+
+/switch/add/vlan/switch2
+{
+    "vlan_id": 20,
+    "name": "VLAN Mercadeo"
+}
+
+/switch/assign/vlan/switch2?interface=FastEthernet0/0/1
+{
+    "vlan_id": 20
+}
+
+/switch/add/vlan/switch2
+{
+    "vlan_id": 30,
+    "name": "VLAN Legal"
+}
+
+/switch/assign/vlan/switch2?interface=FastEthernet0/0/2
+{
+    "vlan_id": 30
+}
+#add pcs preconfig
+http://127.0.0.1:5000/pc/add/PC0
+http://127.0.0.1:5000/pc/add/PC1
+http://127.0.0.1:5000/pc/add/PC2
+http://127.0.0.1:5000/pc/add/PC3
+http://127.0.0.1:5000/pc/add/PC4
+http://127.0.0.1:5000/pc/add/PC5

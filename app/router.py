@@ -6,6 +6,20 @@ router_bp = Blueprint('router', __name__)
 # List of routers added to the configuration.
 routers = []
 
+router_vlans = {
+    "VLAN Ingenieria": {
+        "vlan_id": 10,
+        "subnet": "192.168.0.0/24"
+    },
+    "VLAN Mercadeo": {
+        "vlan_id": 20,
+        "subnet": "192.168.1.0/24"
+    },
+    "VLAN Legal": {
+        "vlan_id": 30,
+        "subnet": "192.168.2.0/24"
+    }
+}
 # Router configuration to be added from the API.
 router = {
   "router-config": {
@@ -20,7 +34,7 @@ router = {
         "enabled": "true",
         "shutdown": "false",
         "ipv4": {
-          "address": "0.0.0.0",
+          "address": "192.168.0.1",
           "netmask": "255.255.255.0"
         }
       },
@@ -30,7 +44,7 @@ router = {
             "enabled": "true",
             "shutdown": "false",
             "ipv4": {
-                "address": "0.0.0.0",
+                "address": "192.168.1.1",
                 "netmask": "255.255.255.0"
             }
         },
@@ -40,7 +54,7 @@ router = {
             "enabled": "true",
             "shutdown": "false",
             "ipv4": {
-                "address": "0.0.0.0",
+                "address": "192.168.2.1",
                 "netmask": "255.255.255.0"
             }
         }
@@ -70,6 +84,17 @@ ipv4_scheme = {
     "netmask": ""
 }
 
+# Device connection
+router_connections = {
+    "router": {
+        "GigabitEthernet0/0/0": "switch1"
+    }
+}
+router_interfaces = {
+    "GigabitEthernet0/0/0.10": "VLAN Ingenieria",
+    "GigabitEthernet0/0/0.20": "VLAN Mercadeo",
+    "GigabitEthernet0/0/0": "VLAN Legal"
+}
 
 @router_bp.route('/get', methods=['GET'])
 def get_items():
@@ -95,13 +120,21 @@ def add_router():
         new_router['router-config']['username'] = temp_router['username']
         new_router['router-config']['password'] = temp_router['password']
 
+        # Assign interfaces to VLANs and connect to the switch
+        for interface in new_router['router-config']['interface']:
+            vlan_name = router_interfaces.get(interface['name'], None)
+            if vlan_name:
+                interface['description'] = f"{vlan_name} interface"
+                interface['ipv4']['address'] = router_vlans[vlan_name]['subnet'].split('/')[0]
+                interface['ipv4']['netmask'] = router_vlans[vlan_name]['subnet'].split('/')[1]
+                interface['connected_to'] = router_connections[temp_router['hostname']][interface['name']]
+
         routers.append(new_router)
         return jsonify({'Success':'Router has been added'}), 201
 
     except (ValueError, KeyError, TypeError) as e:
         print("Error parsing information:", e)
         return jsonify({'error': 'Invalid input, Maybe try checking format?'}), 400
-
 
 """
 Allow the user to change the description, enabled, and shutdown status of a specific interface on a router.
@@ -141,6 +174,7 @@ def add_ipv4(hostname, interface_to_change):
                     return jsonify({'Success': 'Interface '+interface_to_change+' has been updated'}), 201
             return jsonify({'error': 'Interface not found'}), 404
     return jsonify({'error': 'Router not found'}), 404
+
 
 """
 Check if the hostname already exists between the existing routers.
