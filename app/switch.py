@@ -10,7 +10,7 @@ switches = []
 switch_config = {
     "switch-config": {
         "hostname": "example-switch",
-        "vlan": [],
+        "vlan_id": [],
         "interface": [
             {
                 "name": "FastEthernet0/0/0",
@@ -134,8 +134,8 @@ def add_vlan(hostname):
 
     for switch in switches:
         if switch['switch-config']['hostname'] == hostname:
-            if temp_vlan not in switch['switch-config']['vlan']:
-                switch['switch-config']['vlan'].append(temp_vlan)
+            if temp_vlan not in switch['switch-config']['vlan_id']:
+                switch['switch-config']['vlan_id'].append(temp_vlan)
                 return jsonify({'Success':'VLAN added to configuration'}), 201
             else:
                 return jsonify({'Error': 'VLAN already exists'}), 400

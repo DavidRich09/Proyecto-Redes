@@ -1,6 +1,7 @@
 import copy
 from flask import Blueprint, jsonify, request
 import json
+import subprocess
 
 pc_bp = Blueprint('pc', __name__)
 
@@ -123,3 +124,21 @@ def change_ipv4(hostname):
             return jsonify(pc)
 
     return jsonify({'error': 'PC not found'}), 404
+
+
+"""
+Perform a fictitious ping from a source PC to a destination PC in a simulated network.
+"""
+@pc_bp.route('/ping/<source>/<destination>', methods=['GET'])
+def ping_pc(source, destination):
+    
+    source_info = pc_vlans.get(source)
+    destination_info = pc_vlans.get(destination)
+
+    if not source_info or not destination_info:
+        return jsonify({'error': 'Source or destination PC not found'}), 404
+
+    if source_info['vlan'] == destination_info['vlan']:
+        return jsonify({'message': f'Ping from {source} to {destination} successful'})
+    else:
+        return jsonify({'error': f'Ping from {source} to {destination} failed: Different VLANs'})
